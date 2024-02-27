@@ -69,6 +69,14 @@ public interface IMediaElement : IView, IAsynchronousMediaElementHandler
 	bool ShouldShowPlaybackControls { get; set; }
 
 	/// <summary>
+	/// Gets or sets whether the player should force TCP for RTSP
+	/// </summary>
+	/// <remarks>
+	/// Only for Android
+	/// </remarks>
+	bool ShouldForceRtpTcp { get; set; }
+
+	/// <summary>
 	/// Gets or sets the source of the media to play.
 	/// </summary>
 	MediaSource? Source { get; set; }

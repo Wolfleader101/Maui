@@ -10,6 +10,7 @@ using Com.Google.Android.Exoplayer2.Video;
 using CommunityToolkit.Maui.Core.Primitives;
 using CommunityToolkit.Maui.Views;
 using Microsoft.Extensions.Logging;
+using Com.Google.Android.Exoplayer2.Source.Rtsp;
 
 namespace CommunityToolkit.Maui.Core.Views;
 
@@ -44,7 +45,6 @@ public partial class MediaManager : Java.Lang.Object, IPlayer.IListener
 			ControllerAutoShow = false,
 			LayoutParameters = new RelativeLayout.LayoutParams(Android.Views.ViewGroup.LayoutParams.MatchParent, Android.Views.ViewGroup.LayoutParams.MatchParent),
 		};
-
 		return (Player, PlayerView);
 	}
 
@@ -313,12 +313,25 @@ public partial class MediaManager : Java.Lang.Object, IPlayer.IListener
 
 		Player.PlayWhenReady = MediaElement.ShouldAutoPlay;
 
+		bool forceRtpTcp = MediaElement.ShouldForceRtpTcp;
+
 		if (MediaElement.Source is UriMediaSource uriMediaSource)
 		{
 			var uri = uriMediaSource.Uri;
 			if (!string.IsNullOrWhiteSpace(uri?.AbsoluteUri))
 			{
-				Player.SetMediaItem(MediaItem.FromUri(uri.AbsoluteUri));
+				if (uri.Scheme.ToLowerInvariant() == "rtsp")
+				{
+					var mediaSourceFactory = new RtspMediaSource.Factory();
+					mediaSourceFactory.SetForceUseRtpTcp(forceRtpTcp);
+					var mediaSource = mediaSourceFactory.CreateMediaSource(MediaItem.FromUri(uri.AbsoluteUri));
+					Player.SetMediaSource(mediaSource);
+				}
+				else
+				{
+					Player.SetMediaItem(MediaItem.FromUri(uri.AbsoluteUri));
+				}
+
 				Player.Prepare();
 
 				hasSetSource = true;

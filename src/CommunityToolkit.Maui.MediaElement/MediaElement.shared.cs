@@ -56,6 +56,18 @@ public class MediaElement : View, IMediaElement, IDisposable
 		BindableProperty.Create(nameof(ShouldMute), typeof(bool), typeof(MediaElement), false);
 
 	/// <summary>
+	/// Backing store for the <see cref="ShouldForceRtpTcp"/> property.
+	/// </summary>
+	/// <remarks>
+	/// Only for Android
+	/// </remarks>
+	public static readonly BindableProperty ShouldForceRtpTcpProperty = BindableProperty.Create(
+	nameof(ShouldForceRtpTcp),
+	typeof(bool),
+	typeof(MediaElement),
+	false);
+
+	/// <summary>
 	/// Backing store for the <see cref="Position"/> property.
 	/// </summary>
 	public static readonly BindableProperty PositionProperty =
@@ -243,6 +255,19 @@ public class MediaElement : View, IMediaElement, IDisposable
 	{
 		get => (bool)GetValue(ShouldMuteProperty);
 		set => SetValue(ShouldMuteProperty, value);
+	}
+
+	/// <summary>
+	/// Gets or sets if a RTSP stream should force TCP
+	/// Default is <see langword="false"/>. This is a bindable property.
+	/// </summary>
+	/// <remarks>
+	/// Only for Android
+	/// </remarks>
+	public bool ShouldForceRtpTcp
+	{
+		get => (bool)GetValue(ShouldForceRtpTcpProperty);
+		set => SetValue (ShouldForceRtpTcpProperty, value);
 	}
 
 	/// <summary>
